@@ -44,6 +44,9 @@ public class LoginUi extends JFrame {
                     Helper.showMsg("Kullanıcı bulunamadı.");
                 }else {
                     System.out.println(user.toString());
+                    this.dispose();
+                    DashboardUi dashboardUi = new DashboardUi( user);
+
                 }
             }
         });
