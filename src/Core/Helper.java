@@ -1,7 +1,6 @@
 package Core;
 
 import javax.swing.*;
-import java.util.TimerTask;
 
 public class Helper {
     public static void setTheme(){
@@ -42,7 +41,9 @@ public class Helper {
 
         if (parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) return false;
 
-        return !parts[1].contains(".");
+        if (parts[1].contains(".")) return false;
+
+        return true;
 
     }
 

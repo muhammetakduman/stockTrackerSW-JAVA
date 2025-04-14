@@ -1,11 +1,11 @@
 package View;
 
+import Controller.UserController;
 import Core.Helper;
+import Entity.User;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class LoginUi extends JFrame {
     private JPanel container;
@@ -17,8 +17,10 @@ public class LoginUi extends JFrame {
     private JLabel lbl_email;
     private JLabel lbl_password;
     private JPasswordField fld_password;
+    private UserController userController;
 
     public LoginUi(){
+        this.userController = new UserController();
         this.add(container);
         this.setTitle("Customer Relation System ");
         this.setSize(400,400);
@@ -30,15 +32,19 @@ public class LoginUi extends JFrame {
         this.setLocation(x,y);
         this.setVisible(true);
 
-        btn_login.addActionListener(e -> {
+        this.btn_login.addActionListener(e -> {
             JTextField[] checkList = {this.fld_password,this.fld_email};
-            if (!Helper.isEmailValid(this.fld_email.getText())){
+            if (Helper.isEmailValid(this.fld_email.getText())){
                 Helper.showMsg("Geçerli bir e-posta giriniz:");
             } else if (Helper.isFieldListEmpty(checkList)){
-                Helper.showMsg("fiil");
-
+                Helper.showMsg("fill");
             }else{
-                Helper.showMsg("done");
+                User user = this.userController.findByLogin(this.fld_email.getText(),this.fld_password.getText());
+                if (user == null){
+                    Helper.showMsg("Kullanıcı bulunamadı.");
+                }else {
+                    System.out.println(user.toString());
+                }
             }
         });
     }
