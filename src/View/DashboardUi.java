@@ -7,8 +7,21 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DashboardUi extends JFrame {
-    private JPanel panel1;
     private JPanel container;
+    private JLabel lbl_welcome;
+    private JButton btn_logout;
+    private JTabbedPane tabbedPane1;
+    private JPanel pnl_customer;
+    private JScrollPane scrl_customer;
+    private JTable tbl_customer;
+    private JPanel pnl_customer_filter;
+    private JTextField fid_f_customer_name;
+    private JButton btn_customer_filter;
+    private JButton btn_customer_filter_reset;
+    private JButton btn_customer_new;
+    private JComboBox cmb_customer_type;
+    private JLabel lbl_f_customer_name;
+    private JLabel lbl_f_customer_type;
     private User user;
 
     public DashboardUi(User user) {
@@ -28,6 +41,12 @@ public class DashboardUi extends JFrame {
         this.setTitle("Müşteri Yönetim System");
         this.setSize(1000, 500);
 
-        System.out.println("giriş yaptı  :" + this.user.toString());
+        this.lbl_welcome.setText("Hoşgeldiniz :" + this.user.getName());
+
+        //btn onclikl olduğunda reacta atıf yapalım :)
+        this.btn_logout.addActionListener(e -> {
+            dispose();
+            LoginUi loginUi = new LoginUi();
+        });
     }
 }
