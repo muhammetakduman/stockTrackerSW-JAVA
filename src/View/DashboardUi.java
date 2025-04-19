@@ -1,5 +1,6 @@
 package View;
 
+import Controller.CustomerController;
 import Core.Helper;
 import Entity.User;
 
@@ -23,13 +24,16 @@ public class DashboardUi extends JFrame {
     private JLabel lbl_f_customer_name;
     private JLabel lbl_f_customer_type;
     private User user;
+    private  CustomerController customerController;
 
     public DashboardUi(User user) {
         this.user = user;
+        this.customerController = new CustomerController();
+
         if (user == null) {
             Helper.showMsg("error");
             dispose();
-            ;
+
         }
 
         int x = (Toolkit.getDefaultToolkit().getScreenSize().width - this.getSize().width) / 2;
@@ -48,5 +52,6 @@ public class DashboardUi extends JFrame {
             dispose();
             LoginUi loginUi = new LoginUi();
         });
+        System.out.println(this.customerController.findAll());
     }
 }
