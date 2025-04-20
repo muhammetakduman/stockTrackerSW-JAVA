@@ -5,6 +5,7 @@ import Entity.Customer;
 import Entity.User;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,6 +32,69 @@ public class CustomerDao {
         return customers;
 
     }
+    public boolean save(Customer customer) {
+        String query2 = "INSERT INTO customer "+
+                "(" +
+                "name," +
+                "type," +
+                "phone," +
+                "email," +
+                "address" +
+                ")" +
+                " VALUES (?,?,?,?,?)";
+        try {
+            PreparedStatement pr = this.connection.prepareStatement(query2);
+            pr.setString(1,customer.getName());
+            pr.setString(2,customer.getType().toString());
+            pr.setString(3,customer.getPhone());
+            pr.setString(4,customer.getEmail());
+            pr.setString(5,customer.getAddress());
+            return pr.executeUpdate() != -1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    public Customer getById(int id){
+        Customer customer = null;
+        String query = "SELECT * FROM customer WHERE id = ?";
+        try {
+            PreparedStatement pr = this.connection.prepareStatement(query);
+            pr.setInt(1,id);
+            ResultSet rs = pr.executeQuery();
+            if (rs.next()){
+                customer = this.match(rs);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return customer;
+
+
+    }
+    public boolean update (Customer customer){
+        String query = "UPDATE customer SET" +
+                "name = ? , " +
+                "type = ? , " +
+                "phone = ? , " +
+                "email = ? , " +
+                "address = ? " +
+                "WHERE id = ?";
+        try {
+            PreparedStatement pr = this.connection.prepareStatement(query);
+            pr.setString(1,customer.getName());
+            pr.setString(2,customer.getType().toString());
+            pr.setString(3,customer.getPhone());
+            pr.setString(4,customer.getEmail());
+            pr.setString(5,customer.getAddress());
+            pr.setInt(6,customer.getId());
+            return pr.executeUpdate() != -1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
     private Customer match(ResultSet rs) throws SQLException {
         Customer customer = new Customer();

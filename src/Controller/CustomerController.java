@@ -1,5 +1,6 @@
 package Controller;
 
+import Core.Helper;
 import Dao.CustomerDao;
 import Entity.Customer;
 
@@ -10,5 +11,20 @@ public class CustomerController {
 
     public ArrayList<Customer> findAll(){
         return this.customerDao.findAll();
+    }
+
+    public boolean save(Customer customer){
+        return this.customerDao.save(customer);
+    }
+
+    public Customer getById(int id){
+        return this.customerDao.getById(id);
+    }
+    public boolean update(Customer customer){
+        if (this.getById(customer.getId()) == null){
+            Helper.showMsg(customer.getId() + "ID kayıtlı müşteri bulunamadı !!");
+            return false;
+        }
+        return this.customerDao.update(customer);
     }
 }

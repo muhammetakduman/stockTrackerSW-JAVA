@@ -41,7 +41,7 @@ public class Helper {
 
         if (parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) return false;
 
-        if (parts[1].contains(".")) return false;
+        if (!parts[1].contains(".")) return false;
 
         return true;
 

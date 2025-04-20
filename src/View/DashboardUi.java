@@ -8,10 +8,7 @@ import Entity.User;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class DashboardUi extends JFrame {
@@ -64,7 +61,21 @@ public class DashboardUi extends JFrame {
 
         loadCustomerTable(null);
         loadCustomerPopupMenu();
+        loadCustomerButtonEvent();
 
+    }
+
+    private void loadCustomerButtonEvent() {
+        this.btn_customer_new.addActionListener(e -> {
+            CustomerUi customerUi = new CustomerUi(new Customer());
+            customerUi.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    loadCustomerTable(null);
+                }
+            });
+
+        });
     }
 
     private void loadCustomerPopupMenu() {
@@ -79,7 +90,14 @@ public class DashboardUi extends JFrame {
 
         this.popup_customer.add("Güncelle").addActionListener(e->{
             int selectId = Integer.parseInt(tbl_customer.getValueAt(tbl_customer.getSelectedRow(),0).toString());
-            System.out.println(selectId);
+            Customer editedCustomer =this.customerController.getById(selectId);
+            CustomerUi customerUi = new CustomerUi(this.customerController.getById(selectId));
+            customerUi.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    loadCustomerTable(null);
+                }
+            });
         });
         this.popup_customer.add("Sil").addActionListener(e->{
             System.out.println("Sil e tıklandı");

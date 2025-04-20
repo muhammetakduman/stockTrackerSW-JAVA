@@ -9,7 +9,7 @@ public class UserController {
     private final UserDao userDao = new UserDao();
 
     public User findByLogin(String email,String password){
-        if (Helper.isEmailValid(email)) return null;
+        Helper.isEmailValid(email);
         return this.userDao.findByLogin(email, password);
 
     }

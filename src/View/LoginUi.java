@@ -18,6 +18,7 @@ public class LoginUi extends JFrame {
     private JLabel lbl_password;
     private JPasswordField fld_password;
     private UserController userController;
+    private DashboardUi dashboardUi;
 
     public LoginUi(){
         this.userController = new UserController();
@@ -45,7 +46,7 @@ public class LoginUi extends JFrame {
                 }else {
                     System.out.println(user.toString());
                     this.dispose();
-                    DashboardUi dashboardUi = new DashboardUi( user);
+                    DashboardUi dashboardUi = new DashboardUi(user);
 
                 }
             }
