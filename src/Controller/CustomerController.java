@@ -27,4 +27,11 @@ public class CustomerController {
         }
         return this.customerDao.update(customer);
     }
+    public boolean delete(int id){
+        if (this.getById(id) == null){
+            Helper.showMsg( id + "ID kayıtlı müşteri bulunmadı");
+            return false;
+        }
+        return this.customerDao.delete(id);
+    }
 }

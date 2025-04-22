@@ -100,7 +100,15 @@ public class DashboardUi extends JFrame {
             });
         });
         this.popup_customer.add("Sil").addActionListener(e->{
-            System.out.println("Sil e tıklandı");
+            int selectId = Integer.parseInt(tbl_customer.getValueAt(tbl_customer.getSelectedRow(),0).toString());
+            if (Helper.confirm("sure")){
+                if (this.customerController.delete(selectId)){
+                    Helper.showMsg("done");
+                    loadCustomerTable(null);
+                } else {
+                    Helper.showMsg("error");
+                }
+            }
         });
 
         this.tbl_customer.setComponentPopupMenu(this.popup_customer);

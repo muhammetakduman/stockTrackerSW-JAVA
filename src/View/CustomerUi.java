@@ -62,7 +62,7 @@ public class CustomerUi extends JFrame {
                 boolean result = false;
                 this.customer.setName(this.fld_customer_name.getText());
                 this.customer.setPhone(this.fld_customer_phone.getText());
-                this.customer.setEmail(this.fld_customer_phone.getText());
+                this.customer.setEmail(this.fld_customer_email.getText());
                 this.customer.setAddress(this.tarea_customer_address.getText());
                 this.customer.setType((Customer.TYPE) this.cmb_customer_type.getSelectedItem());
 

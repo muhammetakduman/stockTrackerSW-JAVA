@@ -73,7 +73,7 @@ public class CustomerDao {
 
     }
     public boolean update (Customer customer){
-        String query = "UPDATE customer SET" +
+        String query = "UPDATE customer SET " +
                 "name = ? , " +
                 "type = ? , " +
                 "phone = ? , " +
@@ -106,4 +106,16 @@ public class CustomerDao {
         customer.setType(Customer.TYPE.valueOf(rs.getString("type")));
         return customer;
     }
+    public boolean delete(int id) {
+        String query = " DELETE FROM customer WHERE id = ?";
+        try {
+            PreparedStatement pr = this.connection.prepareStatement(query);
+            pr.setInt(1,id);
+            return pr.executeUpdate() != -1;
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return true;
+    }
+
 }

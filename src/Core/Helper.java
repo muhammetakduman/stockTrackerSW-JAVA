@@ -46,10 +46,17 @@ public class Helper {
         return true;
 
     }
+    public static void   optionPaneDialogTR(){
+        UIManager.put("OptionPane.okButtonText" , "Tamam");
+        UIManager.put("OptionPane.yesButtonText" , "Evet");
+        UIManager.put("OptionPane.noButtonText" , "Hayır");
+
+    }
 
     // Costumaized pop-up message;
     public static void showMsg(String message){
         String msg;
+        optionPaneDialogTR();
         String title = switch (message) {
             case "fill" -> {
                 msg = "Lütfen tüm alanları doldurunuz!";
@@ -71,6 +78,17 @@ public class Helper {
 
         JOptionPane.showMessageDialog(null ,msg, title, JOptionPane.INFORMATION_MESSAGE);
 
+    }
+
+    public static boolean confirm(String str){
+        optionPaneDialogTR();
+        String msg;
+        if (str.equals("sure")){
+            msg = "Bu işlemi gerçekleştirmek istediğine \n emin misin?";
+        }else {
+            msg = str;
+        }
+        return JOptionPane.showConfirmDialog(null,msg,"Emin misin ?" , JOptionPane.YES_NO_OPTION) == 0;
     }
 
 }
