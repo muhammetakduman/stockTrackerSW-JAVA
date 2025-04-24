@@ -12,10 +12,11 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 public class DashboardUi extends JFrame {
+
     private JPanel container;
     private JLabel lbl_welcome;
     private JButton btn_logout;
-    private JTabbedPane tabbedPane1;
+    private JTabbedPane tab_menu;
     private JPanel pnl_customer;
     private JScrollPane scrl_customer;
     private JTable tbl_customer;
@@ -27,46 +28,58 @@ public class DashboardUi extends JFrame {
     private JComboBox<Customer.TYPE> cmb_f_customer_type;
     private JLabel lbl_f_customer_name;
     private JLabel lbl_f_customer_type;
+    private JPanel pnl_product;
+    private JScrollPane scrl_product;
+    private JTable tbl_procut;
+    private JPanel pnl_product_filter;
+    private JTextField fld_f_product_name;
+    private JTextField fld_f_product_code;
+    private JComboBox cmb_f_product_stock;
+    private JButton btn_product_filter;
+    private JButton btn_product_filter_reset;
+    private JButton btn_product_new;
+    private JLabel lbl_f_product_name;
+    private JLabel lbl_f_product_code;
+    private JLabel lbl_f_prodcut_stock;
     private User user;
-    private  CustomerController customerController;
+    private CustomerController customerController;
     private DefaultTableModel tmdl_customer = new DefaultTableModel();
     private final JPopupMenu popup_customer = new JPopupMenu();
 
     public DashboardUi(User user) {
+
         this.user = user;
         this.customerController = new CustomerController();
 
         if (user == null) {
             Helper.showMsg("error");
             dispose();
-
         }
 
         int x = (Toolkit.getDefaultToolkit().getScreenSize().width - this.getSize().width) / 2;
         int y = (Toolkit.getDefaultToolkit().getScreenSize().height - this.getSize().height) / 2;
         this.setLocation(x, y);
-        this.setVisible(true);
-
-        this.add(container);
-        this.setTitle("Müşteri Yönetim System");
+        this.setTitle("Müşteri Yönetim Sistemi");
         this.setSize(1000, 500);
+
+        this.setContentPane(container); // this.add(container); yerine bu daha doğrudur
+        this.setVisible(true);
 
         this.lbl_welcome.setText("Hoşgeldiniz :" + this.user.getName());
 
-        //btn onclikl olduğunda reacta atıf yapalım :)
         this.btn_logout.addActionListener(e -> {
             dispose();
-            LoginUi loginUi = new LoginUi();
+            new LoginUi();
         });
 
         loadCustomerTable(null);
         loadCustomerPopupMenu();
         loadCustomerButtonEvent();
+
         this.cmb_f_customer_type.setModel(new DefaultComboBoxModel<>(Customer.TYPE.values()));
         this.cmb_f_customer_type.setSelectedItem(null);
-
-
     }
+
 
     private void loadCustomerButtonEvent() {
         this.btn_customer_new.addActionListener(e -> {
@@ -102,13 +115,13 @@ public class DashboardUi extends JFrame {
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
                 int selectedRow = tbl_customer.rowAtPoint(e.getPoint());
-                tbl_customer.setRowSelectionInterval(selectedRow,selectedRow);
+                tbl_customer.setRowSelectionInterval(selectedRow, selectedRow);
             }
         });
 
-        this.popup_customer.add("Güncelle").addActionListener(e->{
-            int selectId = Integer.parseInt(tbl_customer.getValueAt(tbl_customer.getSelectedRow(),0).toString());
-            Customer editedCustomer =this.customerController.getById(selectId);
+        this.popup_customer.add("Güncelle").addActionListener(e -> {
+            int selectId = Integer.parseInt(tbl_customer.getValueAt(tbl_customer.getSelectedRow(), 0).toString());
+            Customer editedCustomer = this.customerController.getById(selectId);
             CustomerUi customerUi = new CustomerUi(this.customerController.getById(selectId));
             customerUi.addWindowListener(new WindowAdapter() {
                 @Override
@@ -117,10 +130,10 @@ public class DashboardUi extends JFrame {
                 }
             });
         });
-        this.popup_customer.add("Sil").addActionListener(e->{
-            int selectId = Integer.parseInt(tbl_customer.getValueAt(tbl_customer.getSelectedRow(),0).toString());
-            if (Helper.confirm("sure")){
-                if (this.customerController.delete(selectId)){
+        this.popup_customer.add("Sil").addActionListener(e -> {
+            int selectId = Integer.parseInt(tbl_customer.getValueAt(tbl_customer.getSelectedRow(), 0).toString());
+            if (Helper.confirm("sure")) {
+                if (this.customerController.delete(selectId)) {
                     Helper.showMsg("done");
                     loadCustomerTable(null);
                 } else {
@@ -133,19 +146,19 @@ public class DashboardUi extends JFrame {
 
     }
 
-    private void loadCustomerTable(ArrayList<Customer>customers) {
-        Object[] columnCustomer = {"ID" , "Müşteri Adı", "Tipi" , "Telefon", "E-posta" , "Adres"};
+    private void loadCustomerTable(ArrayList<Customer> customers) {
+        Object[] columnCustomer = {"ID", "Müşteri Adı", "Tipi", "Telefon", "E-posta", "Adres"};
 
-        if (customers==null){
-            customers=this.customerController.findAll();
+        if (customers == null) {
+            customers = this.customerController.findAll();
         }
 
         //tablo sıfırlama
-        DefaultTableModel  clearModel = (DefaultTableModel) this.tbl_customer.getModel();
+        DefaultTableModel clearModel = (DefaultTableModel) this.tbl_customer.getModel();
         clearModel.setRowCount(0);
 
         this.tmdl_customer.setColumnIdentifiers(columnCustomer);
-        for(Customer customer : customers) {
+        for (Customer customer : customers) {
             Object[] rowObject = {
                     customer.getId(),
                     customer.getName(),
@@ -162,4 +175,6 @@ public class DashboardUi extends JFrame {
         this.tbl_customer.getColumnModel().getColumn(0).setMaxWidth(50);
         this.tbl_customer.setEnabled(false);
     }
+
+
 }

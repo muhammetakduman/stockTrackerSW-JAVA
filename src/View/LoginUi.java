@@ -5,7 +5,11 @@ import Core.Helper;
 import Entity.User;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
+import java.util.Locale;
 
 public class LoginUi extends JFrame {
     private JPanel container;
@@ -20,30 +24,30 @@ public class LoginUi extends JFrame {
     private UserController userController;
     private DashboardUi dashboardUi;
 
-    public LoginUi(){
+    public LoginUi() {
         this.userController = new UserController();
         this.add(container);
         this.setTitle("Customer Relation System ");
-        this.setSize(400,400);
+        this.setSize(400, 400);
 
         //ekranı ortala
 
-        int x = (Toolkit.getDefaultToolkit().getScreenSize().width  - this.getSize().width ) /2;
-        int y = (Toolkit.getDefaultToolkit().getScreenSize().height  - this.getSize().height )  /2;
-        this.setLocation(x,y);
+        int x = (Toolkit.getDefaultToolkit().getScreenSize().width - this.getSize().width) / 2;
+        int y = (Toolkit.getDefaultToolkit().getScreenSize().height - this.getSize().height) / 2;
+        this.setLocation(x, y);
         this.setVisible(true);
 
         this.btn_login.addActionListener(e -> {
-            JTextField[] checkList = {this.fld_password,this.fld_email};
-            if (Helper.isEmailValid(this.fld_email.getText())){
+            JTextField[] checkList = {this.fld_password, this.fld_email};
+            if (Helper.isEmailValid(this.fld_email.getText())) {
                 Helper.showMsg("Geçerli bir e-posta giriniz:");
-            } else if (Helper.isFieldListEmpty(checkList)){
+            } else if (Helper.isFieldListEmpty(checkList)) {
                 Helper.showMsg("fill");
-            }else{
-                User user = this.userController.findByLogin(this.fld_email.getText(),this.fld_password.getText());
-                if (user == null){
+            } else {
+                User user = this.userController.findByLogin(this.fld_email.getText(), this.fld_password.getText());
+                if (user == null) {
                     Helper.showMsg("Kullanıcı bulunamadı.");
-                }else {
+                } else {
                     System.out.println(user.toString());
                     this.dispose();
                     DashboardUi dashboardUi = new DashboardUi(user);
@@ -52,4 +56,5 @@ public class LoginUi extends JFrame {
             }
         });
     }
+
 }

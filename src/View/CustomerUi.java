@@ -26,22 +26,22 @@ public class CustomerUi extends JFrame {
     private CustomerController customerController;
 
 
-    public CustomerUi(Customer customer){
-        this.customer=customer;
+    public CustomerUi(Customer customer) {
+        this.customer = customer;
         this.customerController = new CustomerController();
         this.add(container);
         this.setTitle("Müşteri Ekle/Düzenle");
-        this.setSize(300,500);
+        this.setSize(300, 500);
 
         //ekranı ortala
 
-        int x = (Toolkit.getDefaultToolkit().getScreenSize().width  - this.getSize().width ) /2;
-        int y = (Toolkit.getDefaultToolkit().getScreenSize().height  - this.getSize().height )  /2;
-        this.setLocation(x,y);
+        int x = (Toolkit.getDefaultToolkit().getScreenSize().width - this.getSize().width) / 2;
+        int y = (Toolkit.getDefaultToolkit().getScreenSize().height - this.getSize().height) / 2;
+        this.setLocation(x, y);
         this.setVisible(true);
         this.cmb_customer_type.setModel(new DefaultComboBoxModel<>(Customer.TYPE.values()));
 
-        if (this.customer.getId() ==0){
+        if (this.customer.getId() == 0) {
             this.lbl_title.setText("Müşteri Ekle");
         } else {
             this.lbl_title.setText("Müşteri Düzenle");
@@ -53,10 +53,10 @@ public class CustomerUi extends JFrame {
         }
 
         this.btn_customer_save.addActionListener(e -> {
-            JTextField[] checkList = {this.fld_customer_name,this.fld_customer_phone};
-            if (Helper.isFieldListEmpty(checkList)){
+            JTextField[] checkList = {this.fld_customer_name, this.fld_customer_phone};
+            if (Helper.isFieldListEmpty(checkList)) {
                 Helper.showMsg("fiil");
-            } else if (!Helper.isFieldEmpty(this.fld_customer_email) && !Helper.isEmailValid(this.fld_customer_email.getText())){
+            } else if (!Helper.isFieldEmpty(this.fld_customer_email) && !Helper.isEmailValid(this.fld_customer_email.getText())) {
                 Helper.showMsg("Lütfen geçerli bir e-posta adresi giriniz!!!!!!.");
             } else {
                 boolean result = false;
@@ -66,19 +66,20 @@ public class CustomerUi extends JFrame {
                 this.customer.setAddress(this.tarea_customer_address.getText());
                 this.customer.setType((Customer.TYPE) this.cmb_customer_type.getSelectedItem());
 
-                if (this.customer.getId() == 0){
+                if (this.customer.getId() == 0) {
                     result = this.customerController.save(this.customer);
                 } else {
                     result = this.customerController.update(this.customer);
                 }
-                if ( result) {
+                if (result) {
                     Helper.showMsg("done");
                     dispose();
-                }else {
+                } else {
                     Helper.showMsg("error");
                 }
 
             }
         });
     }
+
 }
