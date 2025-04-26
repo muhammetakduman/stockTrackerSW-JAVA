@@ -69,9 +69,9 @@ public class CustomerDao {
             throw new RuntimeException(e);
         }
         return customer;
-
-
     }
+
+
     public boolean update (Customer customer){
         String query = "UPDATE customer SET " +
                 "name = ? , " +

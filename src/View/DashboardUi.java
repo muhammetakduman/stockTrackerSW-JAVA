@@ -88,7 +88,22 @@ public class DashboardUi extends JFrame {
         //productTable
         loadProductTable(null);
         loadProductPopupMenu();
+        loadProductButtonEvent();
     }
+
+    private void loadProductButtonEvent() {
+        this.btn_product_new.addActionListener(e -> {
+            ProductUi productUi = new ProductUi(new Product());
+            productUi.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    loadProductTable(null);
+
+                }
+            });
+        });
+    }
+
     private void loadProductPopupMenu(){
         this.tbl_product.addMouseListener(new MouseAdapter() {
             @Override
@@ -98,8 +113,27 @@ public class DashboardUi extends JFrame {
                 tbl_product.setRowSelectionInterval(selectedRow, selectedRow);
             }
         });
-        this.popup_product.add("Güncelle");
-        this.popup_product.add("Sil");
+        this.popup_product.add("Güncelle").addActionListener(e->{
+          int selectId = Integer.parseInt(this.tbl_product.getValueAt(this.tbl_product.getSelectedRow(),0).toString());
+          ProductUi productUi = new ProductUi(this.productController.getById(selectId));
+          productUi.addWindowListener(new WindowAdapter() {
+              @Override
+              public void windowClosed(WindowEvent e) {
+                  loadProductTable(null);
+              }
+          });
+        });
+        this.popup_product.add("Sil").addActionListener(e->{
+            int selectId = Integer.parseInt(this.tbl_product.getValueAt(this.tbl_product.getSelectedRow(),0).toString());
+            if (Helper.confirm("sure")){
+                if (this.productController.delete(selectId)){
+                    Helper.showMsg("done");
+                    loadProductTable(null);
+                }else {
+                    Helper.showMsg("error");
+                }
+            }
+        });
 
         this.tbl_product.setComponentPopupMenu(this.popup_product);
     }
