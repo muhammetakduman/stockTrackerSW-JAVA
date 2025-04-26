@@ -131,7 +131,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="a0c91" class="javax.swing.JTable" binding="tbl_procut">
+                  <component id="a0c91" class="javax.swing.JTable" binding="tbl_product">
                     <constraints/>
                     <properties/>
                   </component>

@@ -1,8 +1,10 @@
 package View;
 
 import Controller.CustomerController;
+import Controller.ProductController;
 import Core.Helper;
 import Entity.Customer;
+import Entity.Product;
 import Entity.User;
 
 import javax.swing.*;
@@ -30,7 +32,7 @@ public class DashboardUi extends JFrame {
     private JLabel lbl_f_customer_type;
     private JPanel pnl_product;
     private JScrollPane scrl_product;
-    private JTable tbl_procut;
+    private JTable tbl_product;
     private JPanel pnl_product_filter;
     private JTextField fld_f_product_name;
     private JTextField fld_f_product_code;
@@ -43,13 +45,17 @@ public class DashboardUi extends JFrame {
     private JLabel lbl_f_prodcut_stock;
     private User user;
     private CustomerController customerController;
+    private ProductController productController;
     private DefaultTableModel tmdl_customer = new DefaultTableModel();
+    private DefaultTableModel tmdl_product = new DefaultTableModel();
     private final JPopupMenu popup_customer = new JPopupMenu();
+    private final JPopupMenu popup_product = new JPopupMenu();
 
     public DashboardUi(User user) {
 
         this.user = user;
         this.customerController = new CustomerController();
+        this.productController = new ProductController();
 
         if (user == null) {
             Helper.showMsg("error");
@@ -78,6 +84,54 @@ public class DashboardUi extends JFrame {
 
         this.cmb_f_customer_type.setModel(new DefaultComboBoxModel<>(Customer.TYPE.values()));
         this.cmb_f_customer_type.setSelectedItem(null);
+
+        //productTable
+        loadProductTable(null);
+        loadProductPopupMenu();
+    }
+    private void loadProductPopupMenu(){
+        this.tbl_product.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                int selectedRow = tbl_product.rowAtPoint(e.getPoint());
+                tbl_product.setRowSelectionInterval(selectedRow, selectedRow);
+            }
+        });
+        this.popup_product.add("Güncelle");
+        this.popup_product.add("Sil");
+
+        this.tbl_product.setComponentPopupMenu(this.popup_product);
+    }
+
+    private void loadProductTable(ArrayList<Product> products) {
+        Object[] columnProduct = {"ID", "Ürün ADI", "Ürün Kodu", "Fiyat", "Stock"};
+
+        if (products == null) {
+            products = this.productController.findAll();
+        }
+
+        //tablo sıfırlama
+        DefaultTableModel clearModel = (DefaultTableModel) this.tbl_product.getModel();
+        clearModel.setRowCount(0);
+
+        this.tmdl_product.setColumnIdentifiers(columnProduct);
+        for (Product product : products) {
+            Object[] rowObject = {
+                    product.getId(),
+                    product.getName(),
+                    product.getCode(),
+                    product.getPrice(),
+                    product.getStock(),
+                };
+            this.tmdl_product.addRow(rowObject);
+        }
+
+        /// TABLE CONFİGURATİON
+        this.tbl_product.setModel(tmdl_product);
+        this.tbl_product.getTableHeader().setReorderingAllowed(false);
+        this.tbl_product.getColumnModel().getColumn(0).setMaxWidth(50);
+        this.tbl_product.setEnabled(false);
     }
 
 
@@ -175,6 +229,5 @@ public class DashboardUi extends JFrame {
         this.tbl_customer.getColumnModel().getColumn(0).setMaxWidth(50);
         this.tbl_customer.setEnabled(false);
     }
-
 
 }
