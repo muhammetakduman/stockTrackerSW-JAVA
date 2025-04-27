@@ -61,7 +61,7 @@ public class ProductUi extends JFrame {
                 Helper.showMsg("fiil");
             } else {
                 this.product.setName(this.fld_product_name.getText());
-                this.product.setCode(this.fld_product_name.getText());
+                this.product.setCode(this.fld_product_code.getText());
                 this.product.setPrice(Integer.parseInt(this.fld_product_price.getText()));
                 this.product.setStock(Integer.parseInt(this.fld_product_stock.getText()));
 

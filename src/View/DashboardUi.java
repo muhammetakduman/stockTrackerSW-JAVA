@@ -3,6 +3,7 @@ package View;
 import Controller.CustomerController;
 import Controller.ProductController;
 import Core.Helper;
+import Core.Item;
 import Entity.Customer;
 import Entity.Product;
 import Entity.User;
@@ -36,7 +37,7 @@ public class DashboardUi extends JFrame {
     private JPanel pnl_product_filter;
     private JTextField fld_f_product_name;
     private JTextField fld_f_product_code;
-    private JComboBox cmb_f_product_stock;
+    private JComboBox<Item> cmb_f_product_stock;
     private JButton btn_product_filter;
     private JButton btn_product_filter_reset;
     private JButton btn_product_new;
@@ -85,10 +86,23 @@ public class DashboardUi extends JFrame {
         this.cmb_f_customer_type.setModel(new DefaultComboBoxModel<>(Customer.TYPE.values()));
         this.cmb_f_customer_type.setSelectedItem(null);
 
-        //productTable
+
+
+
+        //productTable configuration
+
+
+
+
         loadProductTable(null);
         loadProductPopupMenu();
         loadProductButtonEvent();
+        this.cmb_f_product_stock.addItem(new Item(1,"Stokta Var"));
+        this.cmb_f_product_stock.addItem(new Item(2,"Stokta Yok"));
+        this.cmb_f_product_stock.setSelectedItem(null);
+
+
+
     }
 
     private void loadProductButtonEvent() {
@@ -102,6 +116,23 @@ public class DashboardUi extends JFrame {
                 }
             });
         });
+
+        this.btn_product_filter.addActionListener(e -> {
+            ArrayList<Product> filteredProducts = this.productController.filter(
+                    this.fld_f_product_name.getText(),
+                    this.fld_f_product_code.getText(),
+                    (Item) this.cmb_f_product_stock.getSelectedItem()
+            );
+
+            loadProductTable(filteredProducts);
+        });
+
+        this.btn_product_filter_reset.addActionListener(e -> {
+            this.fld_f_product_code.setText(null);
+            this.fld_f_product_name.setText(null);
+            this.cmb_f_product_stock.setSelectedItem(null);
+            loadProductTable(null);
+        });
     }
 
     private void loadProductPopupMenu(){
@@ -113,6 +144,8 @@ public class DashboardUi extends JFrame {
                 tbl_product.setRowSelectionInterval(selectedRow, selectedRow);
             }
         });
+
+
         this.popup_product.add("Güncelle").addActionListener(e->{
           int selectId = Integer.parseInt(this.tbl_product.getValueAt(this.tbl_product.getSelectedRow(),0).toString());
           ProductUi productUi = new ProductUi(this.productController.getById(selectId));
@@ -123,6 +156,8 @@ public class DashboardUi extends JFrame {
               }
           });
         });
+
+
         this.popup_product.add("Sil").addActionListener(e->{
             int selectId = Integer.parseInt(this.tbl_product.getValueAt(this.tbl_product.getSelectedRow(),0).toString());
             if (Helper.confirm("sure")){

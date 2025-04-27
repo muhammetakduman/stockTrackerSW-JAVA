@@ -37,17 +37,6 @@ public class ProductDao {
     }
 
 
-    /// match method
-    private Product match(ResultSet rs) throws SQLException {
-        Product product = new Product();
-        product.setId(rs.getInt("id"));
-        product.setName(rs.getString("name"));
-        product.setCode(rs.getString("code"));
-        product.setPrice(rs.getInt("price"));
-        product.setStock(rs.getInt("stock"));
-        return product;
-    }
-
     public boolean save(Product product) {
         String query2 = "INSERT INTO product "+
                 "(" +
@@ -116,5 +105,29 @@ public class ProductDao {
             e.printStackTrace();
         }
         return true;
+    }
+
+    public ArrayList<Product> query(String query){
+        ArrayList<Product> products = new ArrayList<>();
+        try {
+            ResultSet rs = this.connection.createStatement().executeQuery(query);
+            while (rs.next()){
+                products.add(this.match(rs));
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    /// match method
+    private Product match(ResultSet rs) throws SQLException {
+        Product product = new Product();
+        product.setId(rs.getInt("id"));
+        product.setName(rs.getString("name"));
+        product.setCode(rs.getString("code"));
+        product.setPrice(rs.getInt("price"));
+        product.setStock(rs.getInt("stock"));
+        return product;
     }
 }
