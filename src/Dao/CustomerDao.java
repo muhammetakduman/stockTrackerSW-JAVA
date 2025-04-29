@@ -32,6 +32,8 @@ public class CustomerDao {
         return customers;
 
     }
+
+
     public boolean save(Customer customer) {
         String query2 = "INSERT INTO customer "+
                 "(" +
