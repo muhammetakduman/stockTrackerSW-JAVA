@@ -119,6 +119,24 @@ public class DashboardUi extends JFrame {
         loadBasketTable();
         loadBasketButtonEvent();
         loadBasketCustomerCombo();
+        btn_basket_new.addActionListener(e -> {
+             Item selectedCustomer= (Item) this.cmb_basket_customer.getSelectedItem();
+             if (selectedCustomer == null){
+                 Helper.showMsg("Lütfen bir müşteri seçiniz.");
+             } else {
+                 Customer customer = this.customerController.getById(selectedCustomer.getKey());
+                 ArrayList<Basket> baskets = this.basketController.findAll();
+
+                 if (customer.getId() ==0) {
+                     Helper.showMsg("Böyle bir müşteri bulunmadı ");
+                 } else if( baskets.size() == 0 ) {
+                     Helper.showMsg("Lütfen Sepete ürün Ekleyiniz");
+
+                 } else {
+                     CardUi cardUi = new CardUi(customer);
+                 }
+             }
+        });
     }
 
     private void loadBasketCustomerCombo(){
