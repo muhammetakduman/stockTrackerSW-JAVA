@@ -18,4 +18,8 @@ public class BasketController {
         return this.basketDao.findAll();
     }
 
+    public boolean clear(){
+        return this.basketDao.clear();
+    }
+
 }

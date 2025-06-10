@@ -64,4 +64,15 @@ public class BasketDao {
         return basket;
     }
 
+    public boolean clear() {
+        String query = " DELETE FROM basket ";
+        try {
+            PreparedStatement pr = this.connection.prepareStatement(query);
+            return pr.executeUpdate() != -1;
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return true;
+    }
+
 }
