@@ -41,7 +41,7 @@ public class CardDao {
 
     /// save method
     public boolean save(Card card) {
-        String query2 = "INSERT INTO cart "+
+        String query2 = "INSERT INTO card "+
                 "(" +
                 "customer_id," +
                 "product_id," +
@@ -56,7 +56,7 @@ public class CardDao {
             pr.setInt(2,card.getProductId());
             pr.setInt(3, card.getPrice());
             pr.setDate(4, Date.valueOf(card.getDate()));
-            pr.setString(4, card.getNote());
+            pr.setString(5, card.getNote());
             return pr.executeUpdate() != -1;
         } catch (SQLException e) {
             throw new RuntimeException(e);

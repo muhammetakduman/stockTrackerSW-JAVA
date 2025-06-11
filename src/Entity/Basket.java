@@ -29,7 +29,7 @@ public class Basket {
         return productId;
     }
 
-    public void setProductId(int productd) {
+    public void setProductId(int productId) {
         this.productId = productId;
     }
 

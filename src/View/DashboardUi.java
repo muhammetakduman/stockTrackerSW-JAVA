@@ -134,6 +134,13 @@ public class DashboardUi extends JFrame {
 
                  } else {
                      CardUi cardUi = new CardUi(customer);
+                     cardUi.addWindowListener(new WindowAdapter() {
+                         @Override
+                         public void windowClosed(WindowEvent e) {
+                             loadBasketTable();
+                             loadProductTable(null);
+                         }
+                     });
                  }
              }
         });
