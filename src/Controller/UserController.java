@@ -13,4 +13,13 @@ public class UserController {
         return this.userDao.findByLogin(email, password);
 
     }
+
+    public boolean save(User user) {
+        return this.userDao.save(user);
+    }
+
+    public User findByEmail(String email) {
+        return this.userDao.findByEmail(email);
+    }
+
 }

@@ -5,11 +5,7 @@ import Core.Helper;
 import Entity.User;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.text.StyleContext;
 import java.awt.*;
-import java.util.Locale;
 
 public class LoginUi extends JFrame {
     private JPanel container;
@@ -21,40 +17,52 @@ public class LoginUi extends JFrame {
     private JLabel lbl_email;
     private JLabel lbl_password;
     private JPasswordField fld_password;
-    private UserController userController;
-    private DashboardUi dashboardUi;
+    private JButton btn_register;
+    private final UserController userController;
 
     public LoginUi() {
+        Helper.setTheme();
+        Helper.optionPaneDialogTR();
         this.userController = new UserController();
-        this.add(container);
-        this.setTitle("Customer Relation System ");
+
+        this.setTitle("Customer Relation System");
+        this.setContentPane(container);
         this.setSize(400, 400);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        //ekranı ortala
-
+        // Ekranı ortala
         int x = (Toolkit.getDefaultToolkit().getScreenSize().width - this.getSize().width) / 2;
         int y = (Toolkit.getDefaultToolkit().getScreenSize().height - this.getSize().height) / 2;
         this.setLocation(x, y);
         this.setVisible(true);
 
+        // Giriş butonu
         this.btn_login.addActionListener(e -> {
-            JTextField[] checkList = {this.fld_password, this.fld_email};
-            if (Helper.isEmailValid(this.fld_email.getText())) {
-                Helper.showMsg("Geçerli bir e-posta giriniz:");
-            } else if (Helper.isFieldListEmpty(checkList)) {
-                Helper.showMsg("fill");
-            } else {
-                User user = this.userController.findByLogin(this.fld_email.getText(), this.fld_password.getText());
-                if (user == null) {
-                    Helper.showMsg("Kullanıcı bulunamadı.");
-                } else {
-                    System.out.println(user.toString());
-                    this.dispose();
-                    DashboardUi dashboardUi = new DashboardUi(user);
+            String email = fld_email.getText().trim();
+            String password = new String(fld_password.getPassword()).trim();
+            JTextField[] checkList = {fld_email};
 
-                }
+            if (!Helper.isEmailValid(email)) {
+                Helper.showMsg("Geçerli bir e-posta giriniz:");
+                return;
+            }
+
+            if (Helper.isFieldListEmpty(checkList) || password.isEmpty()) {
+                Helper.showMsg("fill");
+                return;
+            }
+
+            User user = userController.findByLogin(email, password);
+            if (user == null) {
+                Helper.showMsg("Kullanıcı bulunamadı.");
+            } else {
+                System.out.println(user);
+                this.dispose();
+                new DashboardUi(user);
             }
         });
-    }
 
+        // Kayıt Ol butonu
+        btn_register.addActionListener(e -> new RegisterUi());
+    }
 }

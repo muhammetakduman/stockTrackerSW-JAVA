@@ -58,4 +58,39 @@ public class UserDao {
         user.setEmail(rs.getString("email"));
         return user;
     }
+    public User findByEmail(String email) {
+        String query = "SELECT * FROM user WHERE email = ?";
+        try {
+            PreparedStatement pr = this.connection.prepareStatement(query);
+            pr.setString(1, email);
+            ResultSet rs = pr.executeQuery();
+            if (rs.next()) {
+                return this.match(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean save(User user) {
+        if (findByEmail(user.getEmail()) != null) {
+            return false; // bu e-mail zaten kayıtlı
+        }
+
+        String query = "INSERT INTO user (name, email, password) VALUES (?, ?, ?)";
+        try {
+            PreparedStatement pr = this.connection.prepareStatement(query);
+            pr.setString(1, user.getName());
+            pr.setString(2, user.getEmail());
+            pr.setString(3, user.getPassword());
+            return pr.executeUpdate() != -1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }
+
+
