@@ -1,14 +1,12 @@
 package View;
 
 import Controller.BasketController;
+import Controller.CardController;
 import Controller.CustomerController;
 import Controller.ProductController;
 import Core.Helper;
 import Core.Item;
-import Entity.Basket;
-import Entity.Customer;
-import Entity.Product;
-import Entity.User;
+import Entity.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -54,15 +52,21 @@ public class DashboardUi extends JFrame {
     private JLabel lbl_basket_price;
     private JLabel lbl_basket_count;
     private JTable tbl_basket;
+    private JTable tbl_cart;
+    private JScrollPane scrl_card;
+
+
     private User user;
     private CustomerController customerController;
     private ProductController productController;
     private BasketController basketController;
+    private CardController cardController;
 
     ///  table model created
     private DefaultTableModel tmdl_customer = new DefaultTableModel();
     private DefaultTableModel tmdl_product = new DefaultTableModel();
     private DefaultTableModel tmdl_basket = new DefaultTableModel();
+    private DefaultTableModel tmdl_cart = new DefaultTableModel();
 
     private final JPopupMenu popup_customer = new JPopupMenu();
     private final JPopupMenu popup_product = new JPopupMenu();
@@ -73,6 +77,7 @@ public class DashboardUi extends JFrame {
         this.customerController = new CustomerController();
         this.productController = new ProductController();
         this.basketController = new BasketController();
+        this.cardController  = new CardController();
 
         if (user == null) {
             Helper.showMsg("error");
@@ -119,32 +124,44 @@ public class DashboardUi extends JFrame {
         loadBasketTable();
         loadBasketButtonEvent();
         loadBasketCustomerCombo();
-        btn_basket_new.addActionListener(e -> {
-             Item selectedCustomer= (Item) this.cmb_basket_customer.getSelectedItem();
-             if (selectedCustomer == null){
-                 Helper.showMsg("Lütfen bir müşteri seçiniz.");
-             } else {
-                 Customer customer = this.customerController.getById(selectedCustomer.getKey());
-                 ArrayList<Basket> baskets = this.basketController.findAll();
 
-                 if (customer.getId() ==0) {
-                     Helper.showMsg("Böyle bir müşteri bulunmadı ");
-                 } else if( baskets.size() == 0 ) {
-                     Helper.showMsg("Lütfen Sepete ürün Ekleyiniz");
+        //cart tab
 
-                 } else {
-                     CardUi cardUi = new CardUi(customer);
-                     cardUi.addWindowListener(new WindowAdapter() {
-                         @Override
-                         public void windowClosed(WindowEvent e) {
-                             loadBasketTable();
-                             loadProductTable(null);
-                         }
-                     });
-                 }
-             }
-        });
+        loadCartTable();
     }
+    private void loadCartTable() {
+        Object[] columnCard = {"ID", "Müşteri Adı", "Ürün Adı", "Fiyat", "Sipariş Tarihi", "Note"};
+        ArrayList<Card> cards = this.cardController.findAll();
+
+        // tablo sıfırlama
+        DefaultTableModel clearModel = (DefaultTableModel) this.tbl_cart.getModel();
+        clearModel.setRowCount(0);
+        this.tmdl_cart.setColumnIdentifiers(columnCard);
+
+        for (Card card : cards) {
+            // ❗ NULL kontrolü burada olmalı
+            if (card.getProduct() == null || card.getCustomer() == null) {
+                continue; // eksik verili kayıtları atla
+            }
+
+            Object[] rowObject = {
+                    card.getId(),
+                    card.getCustomer().getName(),
+                    card.getProduct().getName(),
+                    card.getPrice(),
+                    card.getDate(),
+                    card.getNote()
+            };
+            this.tmdl_cart.addRow(rowObject);
+        }
+
+        // tablo konfigürasyonu
+        this.tbl_cart.setModel(tmdl_cart);
+        this.tbl_cart.getTableHeader().setReorderingAllowed(false);
+        this.tbl_cart.getColumnModel().getColumn(0).setMaxWidth(50);
+        this.tbl_cart.setEnabled(false);
+    }
+
 
     private void loadBasketCustomerCombo(){
         ArrayList<Customer> customers = this.customerController.findAll();
@@ -164,6 +181,33 @@ public class DashboardUi extends JFrame {
                 loadBasketTable();
             } else {
                 Helper.showMsg("error");
+            }
+        });
+
+        this.btn_basket_new.addActionListener(e -> {
+            Item selectedCustomer= (Item) this.cmb_basket_customer.getSelectedItem();
+            if (selectedCustomer == null){
+                Helper.showMsg("Lütfen bir müşteri seçiniz.");
+            } else {
+                Customer customer = this.customerController.getById(selectedCustomer.getKey());
+                ArrayList<Basket> baskets = this.basketController.findAll();
+
+                if (customer.getId() ==0) {
+                    Helper.showMsg("Böyle bir müşteri bulunmadı ");
+                } else if( baskets.size() == 0 ) {
+                    Helper.showMsg("Lütfen Sepete ürün Ekleyiniz");
+
+                } else {
+                    CardUi cardUi = new CardUi(customer);
+                    cardUi.addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosed(WindowEvent e) {
+                            loadBasketTable();
+                            loadProductTable(null);
+                            loadCartTable();
+                        }
+                    });
+                }
             }
         });
     }
@@ -416,5 +460,6 @@ public class DashboardUi extends JFrame {
         this.tbl_customer.getColumnModel().getColumn(0).setMaxWidth(50);
         this.tbl_customer.setEnabled(false);
     }
+
 
 }

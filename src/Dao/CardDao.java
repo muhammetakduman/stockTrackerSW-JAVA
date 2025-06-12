@@ -2,6 +2,7 @@ package Dao;
 
 import Core.Database;
 import Entity.Card;
+import Entity.Customer;
 import Entity.Product;
 
 import java.sql.*;
@@ -74,11 +75,22 @@ public class CardDao {
         card.setProductId(rs.getInt("product_id"));
         card.setNote(rs.getString("note"));
         card.setDate(LocalDate.parse(rs.getString("date")));
-        card.setCustomer(this.customerDao.getById(card.getCustomerId()));
-        card.setProduct(this.productDao.getById(card.getProductId()));
+
+        Customer customer = this.customerDao.getById(card.getCustomerId());
+        if (customer == null) {
+            System.out.println("❌ Uyarı: Müşteri bulunamadı! card_id: " + card.getId());
+        }
+        card.setCustomer(customer);
+
+        Product product = this.productDao.getById(card.getProductId());
+        if (product == null) {
+            System.out.println("❌ Uyarı: Ürün bulunamadı! card_id: " + card.getId());
+        }
+        card.setProduct(product);
 
         return card;
     }
+
 
 
 

@@ -340,7 +340,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="f7c82" class="javax.swing.JTable" binding="tbl_card">
+                  <component id="f7c82" class="javax.swing.JTable" binding="tbl_cart">
                     <constraints/>
                     <properties/>
                   </component>
